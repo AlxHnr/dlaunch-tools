@@ -1,12 +1,12 @@
-;; This unit provides a wrapper around dmenu, which parses "dmenu-args",
-;; passes the right arguments to dmenu and handles all the pipes and
-;; processes.
+;; This unit provides a wrapper around dmenu. It reads arguments
+;; from "dmenu-args.scm" and passes them to dmenu.
 (declare (unit dmenu-wrapper)
   (uses config-files)
   (export dmenu-args dmenu-select
           dmenu-select-from-list))
 
-(use extras posix)
+(use extras)
+(use posix)
 
 (define dmenu-args
   (call-with-input-file
@@ -14,12 +14,13 @@
     read))
 
 ;; This function wraps dmenu. 'write-fun' should take an output port to
-;; write lines to dmenu. After that the user can select one line or even
-;; input his own text. This string will be returned on success. Otherwise
-;; #f will be returned.
-(define (dmenu-select write-fun)
+;; write lines to dmenu. On success, the input of the user will be returned
+;; as a string. Otherwise #f will be returned. This function takes an
+;; optional second parameter, which is a list of strings, that will be
+;; passed to dmenu additionally to the args specified in "dmenu-args.scm".
+(define (dmenu-select write-fun #!optional (extra-args '()))
   (define-values (dmenu-in dmenu-out dmenu-pid)
-    (process "dmenu" dmenu-args))
+    (process "dmenu" (append dmenu-args extra-args)))
   (write-fun dmenu-out)
   (close-output-port dmenu-out)
   (define selected-string (read-line dmenu-in))
@@ -29,9 +30,12 @@
 
 ;; Takes a list of strings, prompts the user and returns either the
 ;; selected string or false. The user may even input his own string.
-(define (dmenu-select-from-list lst)
+;; This function takes an optional second parameter, which is a list of
+;; strings that are passed as extra arguments to dmenu.
+(define (dmenu-select-from-list lst #!optional (extra-args '()))
   (dmenu-select
     (lambda (out)
       (for-each
         (lambda (str) (write-line str out))
-        lst))))
+        lst))
+    extra-args))
