@@ -2,7 +2,7 @@
 ;; passes the right arguments to dmenu and handles all the pipes and
 ;; processes.
 (declare (unit dmenu-wrapper)
-  (uses helper-functions config-files)
+  (uses config-files)
   (export dmenu-args dmenu-select
           dmenu-select-from-list))
 
