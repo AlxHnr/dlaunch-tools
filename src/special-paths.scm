@@ -7,6 +7,7 @@
           ensure-data-dir
           ensure-config-dir
           ensure-cache-dir))
+
 (use files)
 
 ;; Determines a path from the environment. 'xdg-var-name' is an uppercase
