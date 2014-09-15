@@ -10,7 +10,8 @@
 (declare (unit score-table)
   (uses score-pair)
   (export score-table-read
-          score-table-write))
+          score-table-write
+          score-table-learn!))
 
 (use srfi-69)
 (use posix)
@@ -51,3 +52,10 @@
     (sort (hash-table->alist score-table) score-pair>?)
     out)
   (close-output-port out))
+
+;; Increases the score of a string in a given score table by 1. An optional
+;; third parameter may specify a custom score. This must be a positive
+;; floating point value, otherwise this may lead to undefined behaviour.
+(define (score-table-learn! score-table str #!optional (score 1.0))
+  (define old-score (hash-table-ref/default score-table str 0.0))
+  (hash-table-set! score-table str (+ old-score score)))
