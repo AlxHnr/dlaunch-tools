@@ -1,8 +1,9 @@
 ;; This unit provides a wrapper around dmenu. It reads arguments
 ;; from "dmenu-args.scm" and passes them to dmenu.
 (declare (unit dmenu-wrapper)
-  (uses config-files)
-  (export dmenu-args dmenu-select
+  (uses special-paths)
+  (export dmenu-args
+          dmenu-select
           dmenu-select-from-list))
 
 (use extras)
