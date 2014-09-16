@@ -22,8 +22,7 @@
 ;; A wrapper around dmenu, which takes the path to a score file as a first
 ;; parameter and uses it to sort all lines from the current input port.
 ;; These lines will be piped into dmenu. The file will be updated after the
-;; user selects a string. If the file does not exist, it will be created
-;; after dmenu has successfully returned the string.
+;; user selects a string. If the file does not exist, it will be created.
 
 (declare (uses score-table score-list dmenu-wrapper))
 (use ports extras)
@@ -51,7 +50,7 @@
     (cdr program-args)))
 
 (if (not selected-command)
-  (exit))
+  (exit 1))
 
 (score-table-learn! score-table selected-command)
 (score-table-write score-table score-file-path)

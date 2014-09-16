@@ -49,6 +49,21 @@ shown to the user and the associated command will be executed.
 ("Shutdown System" . "sudo shutdown -h now")
 ```
 
+### dlaunch-score
+
+This tool is like dlaunch, but with the difference that it takes a path to
+a score file as the first argument and will use it to sort its input before
+passing it to dmenu. The score file will be updated after the user has
+selected a string. If the file does not exist, it will be created.
+Dlaunch-score returns 1 if the user has aborted his selection.
+
+Here is an example, which lets the user search for a file in his home
+directory:
+
+```shell
+find "$HOME" | dlaunch-score "$HOME/my-score-file.scm"
+```
+
 ## Requirements
 
 * [CHICKEN Scheme](http://call-cc.org)
