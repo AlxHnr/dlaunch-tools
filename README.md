@@ -81,7 +81,7 @@ make install
 ```
 
 To be able to run locally installed commands from your shell, you need to
-add the local binary path to the PATH variable.
+add the local binary path to your PATH variable.
 
 One way of doing this, is to add the following line to your `~/.profile`:
 
@@ -91,8 +91,9 @@ export PATH+=":$HOME/.local/bin"
 
 ## Uninstalling
 
-It is as simple as replacing "install" with "uninstall" when running make.
-Here two examples for both global and local installations:
+Uninstalling dlaunch-tools is almost the same as installing it. Just
+replace "install" with "uninstall" when running make. Here are two examples
+for both global and local installations:
 
 ```shell
 sudo make uninstall
