@@ -1,5 +1,5 @@
 # This makefile builds all files in src/. Files not containing an unit
-# declaration will be build to seperate programs and linked against all
+# declaration will be build to separate programs and linked against all
 # objects with an unit declaration.
 UNITS := ${patsubst src/%.scm,build/%.o,\
 	${shell grep -rl '^(declare (unit' src/}}
