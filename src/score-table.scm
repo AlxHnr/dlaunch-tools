@@ -30,7 +30,7 @@
 ;; function 'score-table-read'.
 
 (declare (unit score-table)
-  (uses score-pair)
+  (uses score-list)
   (export score-table-read
           score-table-write
           score-table-learn!))
@@ -71,7 +71,8 @@
   (newline out)
   (write-line "; Associative list of strings and their scores:" out)
   (pretty-print
-    (sort (hash-table->alist score-table) score-pair>?)
+    (score-list-sort
+      (hash-table->alist score-table))
     out)
   (close-output-port out))
 

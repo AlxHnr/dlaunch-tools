@@ -24,8 +24,9 @@
 ;; string to its score.
 
 (declare (unit score-list)
-  (uses score-table score-pair)
+  (uses score-table)
   (export score-list-add
+          score-list-sort
           score-list-harvest))
 
 (use srfi-69)
@@ -38,7 +39,14 @@
     (cons str (hash-table-ref/default score-table str 0))
     lst))
 
+;; Sorts a score list and returns it.
+(define (score-list-sort lst)
+  (sort lst (lambda (a b)
+              (if (= (cdr a) (cdr b))
+                (string<? (car a) (car b))
+                (> (cdr a) (cdr b))))))
+
 ;; Returns a list of strings sorted by their score. Takes a valid
 ;; score-list.
 (define (score-list-harvest lst)
-  (map car (sort lst score-pair>?)))
+  (map car (score-list-sort lst)))
