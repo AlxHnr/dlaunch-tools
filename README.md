@@ -22,9 +22,9 @@ Dlaunch is able to learn and can sort its input stream based on popularity.
 To make use of this feature, you must pass the path of a score file to
 dlaunch. This can be done by the "--score-file=FILE" argument. This file
 will be updated after each invocation. If the file does not exist, it will
-be created after the user has selected a string. The importance of each
-learned string will fade from time to time, unless the user keeps selecting
-it. Dlaunch aborts with an error and returns 1 if the score file contains
+be created after the user selects a string. The importance of each learned
+string will fade from time to time, unless the user keeps selecting it.
+Dlaunch aborts with an error and returns 1 if the score file contains
 invalid expressions.
 
 Here is an example, which lets the user search for a file in his home
