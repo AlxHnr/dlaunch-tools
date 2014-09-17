@@ -6,7 +6,7 @@ defining custom commands or sorting commands by usage.
 
 ### dlaunch
 
-A modest wrapper around dmenu. It launches dmenu with arguments defined in
+Dlaunch launches dmenu with arguments defined in
 `~/.config/dlaunch-tools/dmenu-args.scm`. The config file path might differ
 on your system. This is a scheme file containing exactly one list of
 strings. Here is an example:
@@ -18,8 +18,19 @@ strings. Here is an example:
  "-sb" "#3A3A3A" "-sf" "#BCBCBC")
 ```
 
-It will save its metadata somewhere in your DATA directory. On most systems
-this is `~/.local/share/dlaunch-tools/dlaunch-run.scm`.
+Dlaunch is able to learn and can sort its input stream based on popularity.
+To make use of this feature, you must pass the path of a score file to
+dlaunch. This can be done by the "--score-file=FILE" argument. If the file
+does not exist, it will be created after the user selects a string. Dlaunch
+aborts with an error and returns 1 if the score file contains invalid
+expressions.
+
+Here is an example, which lets the user search for a file in his home
+directory:
+
+```shell
+find "$HOME" | dlaunch --score-file "$HOME/my-score-file.scm"
+```
 
 ### dlaunch-run
 
@@ -49,20 +60,8 @@ shown to the user and the associated command will be executed.
 ("Shutdown System" . "sudo shutdown -h now")
 ```
 
-### dlaunch-score
-
-This tool is like dlaunch, but with the difference that it takes a path to
-a score file as its first argument and uses it to sort its input before
-passing it to dmenu. The score file will be updated after the user has
-selected a string. If the file does not exist, it will be created.
-Dlaunch-score returns 1 if the user has aborted his selection.
-
-Here is an example, which lets the user search for a file in his home
-directory:
-
-```shell
-find "$HOME" | dlaunch-score "$HOME/my-score-file.scm"
-```
+It will save its metadata somewhere in your DATA directory. On most systems
+this is `~/.local/share/dlaunch-tools/dlaunch-run.scm`.
 
 ## Requirements
 

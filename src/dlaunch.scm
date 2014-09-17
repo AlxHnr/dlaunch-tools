@@ -20,8 +20,43 @@
 ;       distribution.
 
 ;; A wrapper around dmenu, which honors special arguments defined in
-;; 'dmenu-args.scm'.
+;; "dmenu-args.scm". An optional score file can be specified by the
+;; "--score-file=FILE" flag. This file will be used it to sort all input
+;; lines, before passing them to dmenu. If the file does not exist, it will
+;; be created. It will be updated after the user selects a string. It will
+;; return 1 if the user aborts his selection, or the score contains invalid
+;; expressions.
 
-(use posix)
-(declare (uses dmenu-wrapper))
-(process-execute "dmenu" (append dmenu-args (command-line-arguments)))
+(declare (uses score-table score-list dmenu-wrapper))
+(use ports extras posix srfi-1 srfi-13)
+
+(define score-file-prefix "--score-file=")
+
+(define-values (dlaunch-args dmenu-extra-args)
+  (partition
+    (lambda (str)
+      (string-prefix? score-file-prefix str))
+    (command-line-arguments)))
+
+;; If there is no score file specified, we can invoke dmenu directly.
+(if (null? dlaunch-args)
+  (process-execute "dmenu" (append dmenu-args dmenu-extra-args))
+  (begin
+    (define score-file-path
+      (substring
+        (last dlaunch-args)
+        (string-length score-file-prefix)))
+    (define score-table (score-table-safe-read score-file-path))
+    (define selected-command
+      (dmenu-select-from-list
+        (score-list-harvest
+          (port-fold
+            (lambda (str lst)
+              (score-list-add lst str score-table))
+            '() read-line))
+        dmenu-extra-args))
+    (if (not selected-command)
+      (exit 1))
+    (score-table-learn! score-table selected-command)
+    (score-table-write score-table score-file-path)
+    (print selected-command)))
