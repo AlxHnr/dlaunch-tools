@@ -20,24 +20,25 @@ strings. Here is an example:
 
 Dlaunch is able to learn and can sort its input stream based on popularity.
 To make use of this feature, you must pass the path of a score file to
-dlaunch. This can be done by the "--score-file=FILE" argument. If the file
-does not exist, it will be created after the user selects a string. Dlaunch
-aborts with an error and returns 1 if the score file contains invalid
-expressions.
+dlaunch. This can be done by the "--score-file=FILE" argument. This file
+will be updated after each invocation. If the file does not exist, it will
+be created after the user has selected a string. The importance of each
+learned string will fade from time to time, unless the user keeps selecting
+it. Dlaunch aborts with an error and returns 1 if the score file contains
+invalid expressions.
 
 Here is an example, which lets the user search for a file in his home
 directory:
 
 ```shell
-find "$HOME" | dlaunch --score-file "$HOME/my-score-file.scm"
+find "$HOME" | dlaunch --score-file="$HOME/my-score-file.scm"
 ```
 
 ### dlaunch-run
 
 This tool is like dlaunch combined with dmenu\_run. It allows you to define
-custom commands and learns the commands you use the most. Dlaunch-run sorts
-the results depending on their frequency. If you stop using a command, its
-importance will fade. Custom commands are defined in the config file
+custom commands and has the same set of learning features as dlaunch.
+Custom commands are defined in the config file
 `~/.config/dlaunch-tools/custom-commands.scm`. The path on your system may
 differ.
 
