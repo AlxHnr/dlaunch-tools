@@ -32,6 +32,7 @@
 (declare (unit score-table)
   (uses score-list)
   (export score-table-read
+          score-table-safe-read
           score-table-write
           score-table-learn!))
 
@@ -42,8 +43,9 @@
 
 ;; This function reads an existing score file, as described above, and
 ;; returns a hash-table which associates a string with its score. It
-;; re-scores the a-list using the timestamp specified in the file and
-;; signals an error if the file does not exist.
+;; re-scores the a-list using the timestamp specified in the file. This
+;; function does not handle errors, thus syntax or file exceptions may be
+;; raised.
 (define (score-table-read filename)
   (define score-file-content (read-file filename))
   (define score-list (cadr score-file-content))
@@ -59,6 +61,19 @@
         (hash-table-set! table (car score-pair) new-score)))
     score-list)
   table)
+
+;; Like 'score-table-read', but with two differences: If the file does not
+;; exist, it returns an empty hash-table. If the file exists and is broken,
+;; it will message an error and terminate the program.
+(define (score-table-safe-read filename)
+  (if (file-exists? filename)
+    (condition-case
+      (score-table-read filename)
+      ((exn syntax)
+       (print-error-message
+         (string-append "Broken score file: " filename))
+       (exit 1)))
+    (make-hash-table)))
 
 ;; Writes a score-table to a file. This function is the counterpart to
 ;; 'score-table-read'. It signals an error if the file couldn't be created.

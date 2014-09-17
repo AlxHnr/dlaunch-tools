@@ -23,23 +23,21 @@
 ;; parameter and uses it to sort all lines from the current input port.
 ;; These lines will be piped into dmenu. The file will be updated after the
 ;; user selects a string. If the file does not exist, it will be created.
-;; It will return 1 if the user aborts his selection.
+;; It will return 1 if the user aborts his selection, or the score file
+;; exists and is broken.
 
 (declare (uses score-table score-list dmenu-wrapper))
 (use ports extras)
 
 (define program-args (command-line-arguments))
 (if (null? program-args)
-  (error
-    (string-append
-      "need at least one argument, which"
-      " must be a path to a score file.")))
+  (begin
+    (print-error-message
+      "No arguments: The first argument must be the path to a score file.")
+    (exit 1)))
 
 (define score-file-path (car program-args))
-(define score-table
-  (condition-case
-    (score-table-read score-file-path)
-    ((exn file) (make-hash-table))))
+(define score-table (score-table-safe-read score-file-path))
 
 (define selected-command
   (dmenu-select-from-list

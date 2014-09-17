@@ -24,17 +24,15 @@
 ;; file can contain lists of strings (commands), which will be listed in
 ;; dmenu. The config file can also contain pairs. A pair associates a
 ;; custom command with a real command. The custom command will appear in
-;; dmenus listing, while the real command will be executed.
+;; dmenus listing, while the real command will be executed. If the config
+;; or score file is broken, it will message an error and return 1.
 
-(declare (uses special-paths dmenu-wrapper score-table score-list))
+(declare (uses special-paths dmenu-wrapper score-table score-list misc))
 (use srfi-1 srfi-69 extras posix)
 
 (define custom-command-file (get-config-file-path "custom-commands.scm"))
 (define score-file-path (get-data-file-path "dlaunch-run.scm"))
-(define score-table
-  (if (file-exists? score-file-path)
-    (score-table-read score-file-path)
-    (make-hash-table)))
+(define score-table (score-table-safe-read score-file-path))
 
 ; Decomposes the content of "dlaunch-run.scm" into a hash table and a score
 ; list. The hash table contains the associations and the list contains the
@@ -56,12 +54,8 @@
           (score-list-add lst (car list-item) score-table))))
     (list)
     (if (file-exists? custom-command-file)
-      (condition-case
-        (read-file custom-command-file)
-        ((exn syntax)
-         (error
-           (string-append "broken config file: " custom-command-file))))
-      (list))))
+      (read-file-or-die custom-command-file)
+      '())))
 
 ; Build our score list from 'custom-commands-scores' and all commands
 ; locatable trough the environment variable 'PATH'.

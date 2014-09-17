@@ -23,7 +23,7 @@
 ;; from "dmenu-args.scm" and passes them to dmenu.
 
 (declare (unit dmenu-wrapper)
-  (uses special-paths)
+  (uses special-paths misc)
   (export dmenu-args
           dmenu-select
           dmenu-select-from-list))
@@ -32,9 +32,11 @@
 (use posix)
 
 (define dmenu-args
-  (call-with-input-file
-    (get-config-file-path "dmenu-args.scm")
-    read))
+  (begin
+    (define arg-file-path (get-config-file-path "dmenu-args.scm"))
+    (if (file-exists? arg-file-path)
+      (car (read-file-or-die arg-file-path))
+      '())))
 
 ;; This function wraps dmenu. 'write-fun' should take an output port to
 ;; write lines to dmenu. On success, the input of the user will be returned
