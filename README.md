@@ -19,7 +19,7 @@ strings. Here is an example:
 ```
 
 Dlaunch is able to learn and can sort its input stream based on popularity.
-To make use of this feature, you must pass the path of a score file to
+To make use of this feature, you must pass the path to a score file to
 dlaunch. This can be done by the "--score-file=FILE" argument. This file
 will be updated after each invocation. If the file does not exist, it will
 be created after the user selects a string. The importance of each learned
@@ -30,7 +30,7 @@ invalid expressions.
 Here is an example, which lets the user search for a file in his home
 directory:
 
-```shell
+```sh
 find "$HOME" | dlaunch --score-file="$HOME/my-score-file.scm"
 ```
 
@@ -42,8 +42,9 @@ Custom commands are defined in the config file
 `~/.config/dlaunch-tools/custom-commands.scm`. The path on your system may
 differ.
 
-You can define a list with one or more strings in this file, which will be
-passed to dmenu additionally to the commands in your PATH directories.
+In this file, you can define an arbitrary amount of lists, each one
+containing at least one string. These will be passed to dmenu additionally
+to the commands in your PATH directories. Here is an example:
 
 ```scheme
 ("i3-msg restart")
@@ -53,7 +54,7 @@ passed to dmenu additionally to the commands in your PATH directories.
 ```
 
 You can associate a description with a command. The description will be
-shown to the user and the associated command will be executed.
+shown to the user and the command will be executed:
 
 ```scheme
 ("Reboot System"   . "sudo shutdown -r now")
@@ -74,7 +75,7 @@ this is `~/.local/share/dlaunch-tools/dlaunch-run.scm`.
 
 First you need to build dlaunch-tools using the following commands:
 
-```
+```sh
 git clone https://github.com/AlxHnr/dlaunch-tools
 cd dlaunch-tools
 make
@@ -84,13 +85,13 @@ Now you can install it. Here are two ways of installing dlaunch-tools:
 
 **Globally**
 
-```shell
+```sh
 sudo make install
 ```
 
 **Locally**
 
-```shell
+```sh
 export INSTALL_PREFIX="$HOME/.local"
 make install
 ```
@@ -100,7 +101,7 @@ add the local binary path to your PATH variable.
 
 One way of doing this, is to add the following line to your `~/.profile`:
 
-```shell
+```sh
 export PATH+=":$HOME/.local/bin"
 ```
 
@@ -110,7 +111,7 @@ Uninstalling dlaunch-tools is almost the same as installing it. Just
 replace "install" with "uninstall" when running make. Here are two examples
 for both global and local installations:
 
-```shell
+```sh
 sudo make uninstall
 
 export INSTALL_PREFIX="$HOME/.local"
@@ -120,14 +121,14 @@ make uninstall
 If you want to get rid of all the user files dlaunch-tools has created, run
 these commands:
 
-```shell
+```sh
 rm -vrf "$HOME/.cache/dlaunch-tools/"
 rm -vrf "$HOME/.local/share/dlaunch-tools/"
 ```
 
 And to get rid of your config files:
 
-```shell
+```sh
 rm -vrf "$HOME/.config/dlaunch-tools/"
 ```
 

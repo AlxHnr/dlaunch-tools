@@ -39,7 +39,7 @@
 (use srfi-69)
 (use posix)
 
-(define score-decay-interval (* 60 60 24 2))
+(define score-decay-interval (* 60 60 24 1.5))
 
 ;; This function reads an existing score file, as described above, and
 ;; returns a hash-table which associates a string with its score. It
