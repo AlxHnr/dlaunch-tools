@@ -5,10 +5,12 @@ UNITS := ${patsubst src/%.scm,build/%.o,\
 	${shell grep -rl '^(declare (unit' src/}}
 OBJECTS  := $(patsubst src/%.scm,build/%.o,$(wildcard src/*.scm))
 PROGRAMS := $(patsubst %.o,%,$(filter-out $(UNITS),$(OBJECTS)))
+TEST_PROGRAMS := $(patsubst test/%.scm,build/test/%,$(wildcard test/*.scm))
 INSTALL_PREFIX ?= /usr/local
 
+# Build targets.
 .SECONDARY: $(OBJECTS)
-.PHONY: all clean install uninstall
+.PHONY: all
 all: $(PROGRAMS)
 
 build/%.o: src/%.scm
@@ -17,9 +19,8 @@ build/%.o: src/%.scm
 build/%: build/%.o $(UNITS)
 	csc $^ -o $@
 
-clean:
-	- rm -rf build/
-
+# Installation targets.
+.PHONY: install uninstall
 install: $(PROGRAMS)
 	mkdir -p "$(INSTALL_PREFIX)/bin/"
 	cp -v $^ "$(INSTALL_PREFIX)/bin/"
@@ -29,3 +30,25 @@ uninstall:
 		rm -v "$(INSTALL_PREFIX)/bin/$$program"; \
 		done
 	rmdir --ignore-fail-on-non-empty "$(INSTALL_PREFIX)/bin/"
+
+# Unit testing.
+.PHONY: test
+.SECONDARY: $(TEST_PROGRAMS:%=%.o)
+
+test: $(TEST_PROGRAMS)
+	mkdir -p test/tmp/
+	@for test in $(TEST_PROGRAMS); do \
+		"$$test"; \
+	done
+
+build/test/%.o: test/%.scm
+	mkdir -p build/test/ && csc -O3 -c $< -o $@
+
+build/test/%: build/test/%.o $(UNITS)
+	csc $^ -o $@
+
+# Other targets.
+.PHONY: clean
+clean:
+	- rm -rf build/
+	- rm -rf test/tmp/

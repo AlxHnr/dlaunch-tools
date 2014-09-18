@@ -6,7 +6,7 @@ defining custom commands or sorting commands by usage.
 
 ### dlaunch
 
-Dlaunch launches dmenu with arguments defined in
+This tool launches dmenu with arguments defined in
 `~/.config/dlaunch-tools/dmenu-args.scm`. The config file path might differ
 on your system. This is a scheme file containing exactly one list of
 strings. Here is an example:
@@ -42,9 +42,9 @@ Custom commands are defined in the config file
 `~/.config/dlaunch-tools/custom-commands.scm`. The path on your system may
 differ.
 
-In this file, you can define an arbitrary amount of lists, each one
-containing at least one string. These will be passed to dmenu additionally
-to the commands in your PATH directories. Here is an example:
+In this file you can define an arbitrary amount of lists. Each list can
+contain one string or more. These will be passed to dmenu, additionally to
+the commands in your PATH directories. Here is an example:
 
 ```scheme
 ("i3-msg restart")
@@ -62,8 +62,8 @@ shown to the user and the command will be executed:
 ("Shutdown System" . "sudo shutdown -h now")
 ```
 
-It will save its metadata somewhere in your DATA directory. On most systems
-this is `~/.local/share/dlaunch-tools/dlaunch-run.scm`.
+Dlaunch-run will save its metadata somewhere in your DATA directory. On
+most systems this is `~/.local/share/dlaunch-tools/dlaunch-run.scm`.
 
 ## Requirements
 
@@ -77,7 +77,7 @@ First you need to build dlaunch-tools using the following commands:
 
 ```sh
 git clone https://github.com/AlxHnr/dlaunch-tools
-cd dlaunch-tools
+cd dlaunch-tools/
 make
 ```
 
@@ -118,7 +118,7 @@ export INSTALL_PREFIX="$HOME/.local"
 make uninstall
 ```
 
-If you want to get rid of all the user files dlaunch-tools has created, run
+If you want to get rid of all the data files dlaunch-tools has created, run
 these commands:
 
 ```sh
@@ -133,6 +133,18 @@ rm -vrf "$HOME/.config/dlaunch-tools/"
 ```
 
 Please mind, that on your system the config file paths may differ.
+
+## Unit Testing
+
+To test dlaunch-tools, you need the
+[test](http://wiki.call-cc.org/eggref/4/test) egg. Simply throw a scheme
+test script into the `test/` directory and run:
+
+```sh
+make test
+```
+
+This will build and run all the tests.
 
 ## License
 
