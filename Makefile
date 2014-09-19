@@ -37,9 +37,9 @@ uninstall:
 
 test: $(TEST_PROGRAMS)
 	mkdir -p test/tmp/
-	@for test in $(TEST_PROGRAMS); do \
-		"$$test" || break; \
-	done
+	@(for test in $(TEST_PROGRAMS); do \
+		"$$test" || exit; \
+	done)
 	rm -rf test/tmp/
 
 build/test/%.o: test/%.scm
