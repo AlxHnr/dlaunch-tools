@@ -20,7 +20,7 @@ strings. Here is an example:
 
 Dlaunch is able to learn and can sort its input stream based on popularity.
 To make use of this feature, you must pass the path to a score file to
-dlaunch. This can be done by the "--score-file=FILE" argument. This file
+dlaunch. This can be done by the `--score-file=FILE` argument. This file
 will be updated after each invocation. If the file does not exist, it will
 be created after the user selects a string. The importance of each learned
 string will fade from time to time, unless the user keeps selecting it.
@@ -68,8 +68,7 @@ most systems this is `~/.local/share/dlaunch-tools/dlaunch-run.scm`.
 ## Requirements
 
 * [CHICKEN Scheme](http://call-cc.org)
-* Make
-* dmenu
+* [dmenu](http://tools.suckless.org/dmenu/)
 
 ## Installation
 
@@ -136,15 +135,15 @@ Please mind, that on your system the config file paths may differ.
 
 ## Unit Testing
 
-To test dlaunch-tools, you need the
-[test](http://wiki.call-cc.org/eggref/4/test) egg. Simply throw a scheme
-test script into the `test/` directory and run:
+For unit testing you need the [test](http://wiki.call-cc.org/eggref/4/test)
+egg. Testing is as simple as running:
 
 ```sh
 make test
 ```
 
-This will build and run all the tests.
+This will build and run all the tests. To add a new test, just throw a
+scheme script into the test/ directory.
 
 ## License
 
