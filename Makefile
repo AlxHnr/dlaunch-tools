@@ -17,13 +17,15 @@ all: $(PROGRAMS)
 build/%: build/%.o $(UNITS)
 	csc $^ -o $@
 
-build/%.o: src/%.scm | $(TYPEFILES)
-	mkdir -p build/ && csc -O3 -c $< -o $@ \
+build/%.o: src/%.scm | build/ $(TYPEFILES)
+	csc -O3 -c $< -o $@ \
 		$(patsubst %,-types %,$(filter-out build/$*.types,$(TYPEFILES)))
 
-build/%.types: src/%.scm
-	mkdir -p build/ && \
+build/%.types: src/%.scm | build/
 		csc -A -specialize -strict-types -local $< -emit-type-file $@
+
+build/:
+	mkdir build/
 
 # Installation targets.
 .PHONY: install uninstall
