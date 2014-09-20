@@ -3,21 +3,27 @@
 # objects with an unit declaration.
 UNITS := ${patsubst src/%.scm,build/%.o,\
 	${shell grep -rl '^(declare (unit' src/}}
+TYPEFILES := $(UNITS:%.o=%.types)
 OBJECTS  := $(patsubst src/%.scm,build/%.o,$(wildcard src/*.scm))
 PROGRAMS := $(patsubst %.o,%,$(filter-out $(UNITS),$(OBJECTS)))
 TEST_PROGRAMS := $(patsubst test/%.scm,build/test/%,$(wildcard test/*.scm))
 INSTALL_PREFIX ?= /usr/local
 
 # Build targets.
-.SECONDARY: $(OBJECTS)
+.SECONDARY: $(OBJECTS) $(TYPEFILES)
 .PHONY: all
 all: $(PROGRAMS)
 
-build/%.o: src/%.scm
-	mkdir -p build/ && csc -O3 -c $< -o $@
-
 build/%: build/%.o $(UNITS)
 	csc $^ -o $@
+
+build/%.o: src/%.scm | $(TYPEFILES)
+	mkdir -p build/ && csc -O3 -c $< -o $@ \
+		$(patsubst %,-types %,$(filter-out build/$*.types,$(TYPEFILES)))
+
+build/%.types: src/%.scm
+	mkdir -p build/ && \
+		csc -A -specialize -strict-types -local $< -emit-type-file $@
 
 # Installation targets.
 .PHONY: install uninstall
