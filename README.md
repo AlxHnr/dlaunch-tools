@@ -1,9 +1,9 @@
 # Dlaunch Tools
 
-_Deprecated in favor of_ [Dlaunch](https://github.com/AlxHnr/Dlaunch).
-
 A simple set of tools and wrappers extending dmenu with features like
 defining custom commands or sorting commands by usage.
+
+**Deprecated in favor of [Dlaunch](https://github.com/AlxHnr/Dlaunch).**
 
 ### dlaunch
 
